@@ -1,9 +1,10 @@
 const axios = require('axios')
+require('dotenv').config()
 
 const generateAuthToken = async () => {
     try{
-        const username = '0oa15ac5v5CLonNa65d7'
-        const password = '2DOHeJbWag8PCCR9ypATcjgqX3K7rMfpWCYhK_Rk'
+        const username = process.env.CLIENT_ID
+        const password = process.env.CLIENT_SECRET
         const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
         console.log(token)
         const {data: response} = await axios.post(`https://dev-26211979.okta.com/oauth2/default/v1/token?grant_type=client_credentials&scope=my_scope`,{},{

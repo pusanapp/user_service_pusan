@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var verifySign = require('./middleware')
+const express = require('express');
+const router = express.Router();
+const verifySign = require('../util/oauthMiddleware');
 const tokenGenerator = require('../util/tokenGenerator')
 
 /* GET users listing. */

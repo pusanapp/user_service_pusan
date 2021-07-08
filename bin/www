@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const verifyToken = require('../routes/middleware')
+const verifyToken = require('../util/oauthMiddleware')
 var app = require('../app');
 var debug = require('debug')('user-service-pusan:server');
 var http = require('http');

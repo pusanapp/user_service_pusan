@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var verifySign = require('./middleware')
+var verifySign = require('../util/oauthMiddleware')
 
 /* GET home page. */
 router.get('/',verifySign, function(req, res, next) {
