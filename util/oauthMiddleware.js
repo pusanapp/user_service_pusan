@@ -2,7 +2,7 @@ require('dotenv').config()
 const OktaJwtVerifier = require('@okta/jwt-verifier')
 
 const oktaJwtVerifier = new OktaJwtVerifier({
-    issuer: 'https://dev-26211979.okta.com/oauth2/default',
+    issuer: process.env.OKTA_URL,
     clientId: process.env.CLIENT_ID
 })
 
