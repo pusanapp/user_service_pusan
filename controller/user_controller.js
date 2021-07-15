@@ -59,7 +59,7 @@ const activateUser = async (req,res) => {
             } else {
                 const user = decoded.data;
                 await UserAuth.update({
-                    active: true
+                    active: 1
                 },{
                     where: {
                         user_id: user.user_id

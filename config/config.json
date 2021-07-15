@@ -1,11 +1,10 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "hanif",
+    "username": "developer",
+    "password": "@Pusanapps8",
     "database": "pusan_dev",
-    "host": "127.0.0.1",
-    "port": 5432,
-    "dialect": "postgres"
+    "host": "116.193.191.200",
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
