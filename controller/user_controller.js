@@ -8,7 +8,7 @@ const tokenGenerator = require('../util/tokenGenerator')
 require('dotenv').config()
 
 const registerUser = async (req, res) => {
-    const data =req.body;
+    const data = req.body;
     const hash = bcrypt.hashSync(data.password, 10);
     const registerUser = {
         user_id: nanoid(),
@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
         role_id: 1,
     }
     console.log(registerUser)
-    await UserAuth.create(registerUser).then(async (result)=> {
+    await UserAuth.create(registerUser).then(async (result) => {
         console.log(result)
         const option = mailTransporter.mailOption
         option.to = 'developer.pusan@gmail.com'
@@ -37,18 +37,17 @@ const registerUser = async (req, res) => {
             status: true,
             message: 'Register Success'
         })
-    }).catch(err=>{
+    }).catch(err => {
         res.send({
             status: false,
             message: err.message
         })
     })
-    res.send({ok:'ok'})
 }
 
-const activateUser = async (req,res) => {
+const activateUser = async (req, res) => {
     const activateToken = req.query.token
-    console.log('TOKEN NYA,',activateToken ? activateToken : "Kosong Token");
+    console.log('TOKEN NYA,', activateToken ? activateToken : "Kosong Token");
     if (activateToken) {
         jwt.verify(activateToken, process.env.TOKEN_SECRET, async (err, decoded) => {
             if (err) {
@@ -60,18 +59,18 @@ const activateUser = async (req,res) => {
                 const user = decoded.data;
                 await UserAuth.update({
                     active: 1
-                },{
+                }, {
                     where: {
                         user_id: user.user_id
                     }
-                }).then(rowUpdate=>{
-                    if(rowUpdate>0){
+                }).then(rowUpdate => {
+                    if (rowUpdate > 0) {
                         res.send({
                             status: true,
                             message: 'Account Activation Success'
                         })
                     }
-                }).catch(err=>{
+                }).catch(err => {
                     res.send({err: err.message})
                 })
             }
@@ -79,61 +78,53 @@ const activateUser = async (req,res) => {
     } else {
         res
             .status(200)
-            .send({ status: false, message: "Activation Account Failed, token not found" });
+            .send({status: false, message: "Activation Account Failed, token not found"});
     }
 }
 
-const loginUser = async (req,res) => {
+const loginUser = async (req, res) => {
     const data = req.body
     await UserAuth.findOne({
-        where:{
+        where: {
             email: data.email
         }
-    }).then(async (result)=>{
-        if(!result){
+    }).then(async (result) => {
+        if (!result) {
             res.send({
                 status: false,
                 message: 'Login Failed, Email Not Found'
             })
-        }
+        }else {
+            const passwordCheck = bcrypt.compareSync(data.password, result.password);
+            console.log(passwordCheck, 'Password Check')
+            if (!passwordCheck) {
+                res.send({
+                    status: false,
+                    message: 'Login Failed, Password Not Match'
+                })
+            }else if(!result.active){
+                res.send({
+                    status: false,
+                    message: 'Login Failed, Account Non Active'
+                })
+            }else {
+                const token = await tokenGenerator.generateAuthToken()
+                await res.send({
+                    status: true,
+                    message: 'Login Success',
+                    token: token
+                })
+            }
 
-        const passwordCheck = bcrypt.compareSync(data.password, result.password);
-        console.log(passwordCheck,'Password Check')
-        if(!passwordCheck){
-            res.send({
-                status: false,
-                message: 'Login Failed, Password Not Match'
-            })
         }
-
-        if(!result.active){
-            res.send({
-                status: false,
-                message: 'Login Failed, Account Non Active'
-            })
-        }
-
-        try {
-            const token = await tokenGenerator.generateAuthToken()
-            await res.send({
-                status: true,
-                message: 'Login Success',
-                token: token
-            })
-        }catch (e) {
-            res.send({
-                status: false,
-                message: e.message
-            })
-        }
-    }).catch(err=>{
+    }).catch(err => {
+        console.log(err)
         res.send({
             status: false,
             message: err.message
         })
     })
 }
-
 
 
 module.exports = {
