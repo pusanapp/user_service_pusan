@@ -1,5 +1,6 @@
 const model = require('../models/index')
 const UserAuth = model.user_auth;
+const UserProfile = model.user_profile;
 const mailTransporter = require('../util/mailerTransport')
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -87,7 +88,13 @@ const loginUser = async (req, res) => {
     await UserAuth.findOne({
         where: {
             email: data.email
-        }
+        },
+        include: [
+            {
+                model: UserProfile,
+                as: 'user_profile',
+            }
+        ]
     }).then(async (result) => {
         if (!result) {
             res.send({
@@ -112,6 +119,7 @@ const loginUser = async (req, res) => {
                 await res.send({
                     status: true,
                     message: 'Login Success',
+                    data: result.user_profile,
                     token: token
                 })
             }
@@ -125,10 +133,29 @@ const loginUser = async (req, res) => {
         })
     })
 }
+const getUser = async(req, res)=>{
+    await UserAuth.findOne({
+        where: {
+            user_id: req.params.user_id,
+        },
+        attributes: {
+            exclude: ['password']
+        },
+        include: [
+            {
+                model: UserProfile,
+                as: 'user_profile',
+            }
+        ]
+    }).then(data=>{
+        res.send(data)
+    })
+}
 
 
 module.exports = {
     registerUser,
     activateUser,
-    loginUser
+    loginUser,
+    getUser
 }

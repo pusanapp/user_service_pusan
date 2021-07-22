@@ -16,5 +16,6 @@ router.post('/test/token', async (req, res) => {
 router.post('/register', userController.registerUser)
 router.get('/activate', userController.activateUser)
 router.post('/login', userController.loginUser)
+router.get('/profile/:user_id', userController.getUser)
 
 module.exports = router;
