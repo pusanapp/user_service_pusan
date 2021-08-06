@@ -34,7 +34,18 @@ const generatorTokenActivation = async (user) =>{
         console.log("ERR", e);
     }
 }
+
+const generateJWTToken = async (data) => {
+    try {
+        return jwt.sign({data: data}, process.env.TOKEN_AUTH_SECRET,{
+            algorithm: "HS256"
+        })
+    }catch (e) {
+        console.log("ERR", e);
+    }
+}
 module.exports = {
     generateAuthToken,
-    generatorTokenActivation
+    generatorTokenActivation,
+    generateJWTToken
 }

@@ -20,7 +20,7 @@ async function verify(token){
 const verifyLoginGoogle = async (req, res)=>{
     const data = req.body;
     const idToken = data.token
-    const token = await tokenGenerator.generateAuthToken()
+    // const token = await tokenGenerator.generateAuthToken()
     await verify(idToken).then(async (payload)=>{
         const userAvailable = await UserProfile.findOne({
             where: {
@@ -38,6 +38,7 @@ const verifyLoginGoogle = async (req, res)=>{
         })
         if(userAvailable){
             console.log('user available')
+            const token = await tokenGenerator.generateJWTToken(userAvailable)
             res.send({
                 status: true,
                 message: 'Login Success',
@@ -76,7 +77,7 @@ const verifyLoginGoogle = async (req, res)=>{
 }
 const verifyLoginFacebook = async (req,res)=>{
     const accessToken = req.body.token;
-    const token = await tokenGenerator.generateAuthToken()
+    // const token = await tokenGenerator.generateAuthToken()
     try{
         const{data: response} = await axios.get(`https://graph.facebook.com/me`,{
             params: {
@@ -100,6 +101,7 @@ const verifyLoginFacebook = async (req,res)=>{
             ]
         })
         if(userAvailable){
+            const token = await tokenGenerator.generateJWTToken(userAvailable)
             console.log('user available')
             res.send({
                 status: true,
@@ -120,7 +122,8 @@ const verifyLoginFacebook = async (req,res)=>{
                     auth_id: result.id,
                     full_name: response.name,
                     profile_picture: response.picture.data.url
-                }).then(final => {
+                }).then(async final => {
+                    const token = await tokenGenerator.generateJWTToken(final)
                     res.send({
                         status: true,
                         message: 'Login Success',

@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     city: DataTypes.STRING,
     province: DataTypes.STRING,
     gender: DataTypes.STRING,
-    postal_code: DataTypes.STRING
+    postal_code: DataTypes.STRING,
+    district_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'user_profile',

@@ -115,7 +115,8 @@ const loginUser = async (req, res) => {
                     message: 'Login Failed, Account Non Active'
                 })
             }else {
-                const token = await tokenGenerator.generateAuthToken()
+                // const token = await tokenGenerator.generateAuthToken()
+                const token = await tokenGenerator.generateJWTToken(result.user_profile)
                 await res.send({
                     status: true,
                     message: 'Login Success',
