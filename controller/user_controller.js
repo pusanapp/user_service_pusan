@@ -19,6 +19,25 @@ const registerUser = async (req, res) => {
     }
     console.log(registerUser)
     await UserAuth.create(registerUser).then(async (result) => {
+        const saveUserProfile = {
+            auth_id: result.id,
+            full_name: data.full_name,
+            email: data.email,
+            profile_picture: data.profile_picture,
+            address: data.address,
+            district: data.district,
+            city: data.city,
+            province: data.province,
+            gender: data.gender,
+            postal_code: data.postal_code,
+            district_id: data.district_id
+        }
+        await UserProfile.create(saveUserProfile).catch(err => {
+            res.send({
+                status: false,
+                message: 'Profile Register Error, '+err.message
+            })
+        })
         console.log(result)
         const option = mailTransporter.mailOption
         option.to = 'developer.pusan@gmail.com'
@@ -41,7 +60,7 @@ const registerUser = async (req, res) => {
     }).catch(err => {
         res.send({
             status: false,
-            message: err.message
+            message: 'Auth Register Error, '+err.message
         })
     })
 }
