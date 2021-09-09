@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
         option.subject = 'TEST'
         const token = await tokenGenerator.generatorTokenActivation(result)
         console.log(token)
-        option.html = `<html>Test Email For Verification <a href="http://116.193.191.200/user-service/api/v1/user/activate?token=${token}">Activate User</a></html>`
+        option.html = `<html>Test Email For Verification <a href="https://pusanair-dev.xyz/user-service/api/v1/user/activate?token=${token}">Activate User</a></html>`
         await mailTransporter.transport.sendMail(option, (data, err) => {
             if (err) {
                 res.send({
