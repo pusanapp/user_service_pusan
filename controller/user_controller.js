@@ -24,6 +24,7 @@ const registerUser = async (req, res) => {
             full_name: data.full_name,
             email: data.email,
             profile_picture: data.profile_picture,
+            phone_number: data.phone_number,
             address: data.address,
             district: data.district,
             city: data.city,
